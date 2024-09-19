@@ -10,7 +10,12 @@ class Agendamento extends Model
     use HasFactory;
 
     protected $fillable = [
-        'instrutor', 'sala', 'data_inicio', 'data_fim', 'turno', 'user_id'
+        'instrutor', 'sala', 'data_inicio', 'data_fim', 'turno', 'user_id', 'equipamentos'
+    ];
+
+    // Aqui você adiciona o casts
+    protected $casts = [
+        'equipamentos' => 'array',
     ];
 
     public function equipamentos()

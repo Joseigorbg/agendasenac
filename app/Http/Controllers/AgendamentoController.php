@@ -44,16 +44,17 @@ class AgendamentoController extends Controller
             'data_inicio'  => 'required|date',
             'data_fim'     => 'required|date|after_or_equal:data_inicio',
             'turno'        => 'required|string|in:manhã,tarde,noite',
+            // Não precisamos mais validar equipamentos como JSON, eles serão tratados diretamente
         ]);
-
+    
         // Captura e codifica os equipamentos como JSON
         $validated['equipamentos'] = json_encode($this->capturaEquipamentos($request));
-
+    
         // Adiciona o user_id ao agendamento
         $validated['user_id'] = auth()->id();
-
+    
         Agendamento::create($validated);
-
+    
         return redirect()->route('agendamentos.index')->with('success', 'Agendamento criado com sucesso!');
     }
 

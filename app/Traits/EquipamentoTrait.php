@@ -15,7 +15,7 @@ trait EquipamentoTrait
     protected function capturaEquipamentos(Request $request): array
     {
         $equipamentos = [];
-
+        
         $listaEquipamentos = [
             'notebooks',
             'projetor',
@@ -27,11 +27,15 @@ trait EquipamentoTrait
             'controle_tv',
             'controle_projetor'
         ];
-
+        
         foreach ($listaEquipamentos as $equipamento) {
-            $equipamentos[$equipamento] = $request->has($equipamento) ? 1 : 0;
+            // Captura a quantidade do equipamento diretamente, com o valor padrão sendo 0
+            $quantidade = $request->input("equipamentos.{$equipamento}.quantity", 0);  
+            $equipamentos[$equipamento] = [
+                'quantity' => is_numeric($quantidade) ? (int) $quantidade : 0,  // Garante que seja numérico, senão usa 0
+            ];
         }
-
+        
         return $equipamentos;
     }
 }
