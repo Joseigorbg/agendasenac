@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+    font-family: 'Figtree', sans-serif;
+}
+/* Cores principais */
+.senacBlue {
+    color: #005CA9; /* Azul do Senac */
+}
+
+.senacOrange {
+    background-color: #F58220; /* Laranja do Senac */
+}
+
+.senacOrange:hover {
+    background-color: #e6731c; /* Hover do botão laranja */
+}
+
+/* Outras cores */
+.text-white {
+    color: #ffffff;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.bg-gray-100 {
+    background-color: #f7fafc;
+}
+
+.text-gray-500 {
+    color: #6b7280; /* Texto cinza claro */
+}
+
+.text-gray-700 {
+    color: #374151; /* Texto cinza médio */
+}
+
+.bg-green-500 {
+    background-color: #10b981; /* Verde sucesso */
+}
+
+.bg-red-500 {
+    background-color: #ef4444; /* Vermelho erro */
+}
+
+.bg-red-600:hover {
+    background-color: #dc2626; /* Hover vermelho erro */
+}
+
+.bg-blue-500 {
+    background-color: #3b82f6; /* Azul botão editar */
+}
+
+.bg-blue-600:hover {
+    background-color: #2563eb; /* Hover botão azul editar */
+}
+
+.bg-gray-500 {
+    background-color: #6b7280; /* Botão cinza PDF */
+}
+
+.bg-gray-600:hover {
+    background-color: #4b5563; /* Hover botão cinza PDF */
+}
+
+/* Focus (input forms) */
+.focus\:ring-senacOrange {
+    box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.5); /* Anel de foco laranja */
+}
+
+.focus\:border-senacOrange {
+    border-color: #F58220; /* Borda de foco laranja */
+}
+
+/* Modal responsivo */
+@media (min-width: 1024px) {
+    form.lg\\:max-w-4xl {
+        max-width: 50rem;
+    }
+
+    .lg\\:w-1\\/2 {
+        width: 50%;
+    }
+}
+
+/* Gradiente para popup */
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, #6B46C1, #D53F8C, #F97316);
+}
+
+/* Transições suaves */
+[x-transition\\:enter],
+[x-transition\\:leave] {
+    transition-property: transform, opacity;
+    transition-duration: 300ms;
+}
+
+input[type="checkbox"] {
+    accent-color: #F97316;
+}
+
+button {
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
