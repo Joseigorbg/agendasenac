@@ -18,10 +18,15 @@ class AgendamentoController extends Controller
     {
         // Obtém o usuário autenticado
         $user = auth()->user();
-
+        
         // Obtém os agendamentos relacionados ao usuário autenticado
         $agendamentos = Agendamento::where('user_id', $user->id)->get();
-
+        
+        // Decodificar o JSON dos equipamentos para cada agendamento, se existir
+        foreach ($agendamentos as $agendamento) {
+            $agendamento->equipamentos = $agendamento->equipamentos ? json_decode($agendamento->equipamentos) : null;
+        }
+    
         return view('agendamentos.index', compact('agendamentos'));
     }
 
@@ -63,27 +68,25 @@ class AgendamentoController extends Controller
      */
     public function edit(Agendamento $agendamento)
     {
-        // Verifica se o agendamento pertence ao usuário autenticado
-        if ($agendamento->user_id !== auth()->id()) {
+        // Verifica se o usuário tem permissão para editar o agendamento
+        if (!auth()->user()->can('update', $agendamento)) {
             return redirect()->route('agendamentos.index')->with('error', 'Você não tem permissão para editar este agendamento.');
         }
-
+    
         // Decodificar os equipamentos para exibir no formulário
         $agendamento->equipamentos = json_decode($agendamento->equipamentos, true);
-
+    
+        // Exibir o formulário de edição para o administrador ou usuário
         return view('agendamentos.edit', compact('agendamento'));
-    }
-
-    /**
-     * Atualizar um agendamento existente no banco de dados.
-     */
+    }    
+    
     public function update(Request $request, Agendamento $agendamento)
     {
-        // Verifica se o agendamento pertence ao usuário autenticado
-        if ($agendamento->user_id !== auth()->id()) {
-            return redirect()->route('agendamentos.index')->with('error', 'Você não tem permissão para editar este agendamento.');
+        // Verifica se o usuário tem permissão para atualizar o agendamento
+        if (!auth()->user()->can('update', $agendamento)) {
+            return redirect()->route('agendamentos.index')->with('error', 'Você não tem permissão para atualizar este agendamento.');
         }
-
+    
         $validated = $request->validate([
             'instrutor'    => 'required|string|max:255',
             'sala'         => 'required|string|max:255',
@@ -91,29 +94,41 @@ class AgendamentoController extends Controller
             'data_fim'     => 'required|date|after_or_equal:data_inicio',
             'turno'        => 'required|string|in:manhã,tarde,noite',
         ]);
-
+    
         // Captura e codifica os equipamentos como JSON
         $validated['equipamentos'] = json_encode($this->capturaEquipamentos($request));
-
+    
         $agendamento->update($validated);
-
+    
+        // Redirecionar para a página de gerenciamento de usuários se for administrador
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.users.show', ['user' => $agendamento->user_id])->with('success', 'Agendamento atualizado com sucesso!');
+        }
+    
         return redirect()->route('agendamentos.index')->with('success', 'Agendamento atualizado com sucesso!');
-    }
+    }    
 
     /**
      * Deletar um agendamento existente do banco de dados.
      */
     public function destroy(Agendamento $agendamento)
     {
-        // Verifica se o agendamento pertence ao usuário autenticado
-        if ($agendamento->user_id !== auth()->id()) {
-            return redirect()->route('agendamentos.index')->with('error', 'Você não tem permissão para deletar este agendamento.');
+        // Verifica se o usuário tem permissão para deletar o agendamento
+        if (!auth()->user()->can('delete', $agendamento)) {
+            return redirect()->route('admin.users.show', $agendamento->user_id)->with('error', 'Você não tem permissão para deletar este agendamento.');
         }
-
+    
         $agendamento->delete();
-
+    
+        // Redireciona para a página do usuário correspondente se for administrador
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.users.show', ['user' => $agendamento->user_id])->with('success', 'Agendamento deletado com sucesso!');
+        }
+    
         return redirect()->route('agendamentos.index')->with('success', 'Agendamento deletado com sucesso!');
     }
+    
+    
 
     /**
      * Gerar um PDF do agendamento.
@@ -124,7 +139,11 @@ class AgendamentoController extends Controller
         if ($agendamento->user_id !== auth()->id()) {
             return redirect()->route('agendamentos.index')->with('error', 'Você não tem permissão para visualizar este agendamento.');
         }
-
+    
+        // Decodificar os equipamentos para passar ao PDF
+        $agendamento->equipamentos = json_decode($agendamento->equipamentos, true);
+    
+        // Gerar o PDF com os dados do agendamento
         $pdf = Pdf::loadView('agendamentos.pdf', compact('agendamento'));
         return $pdf->download('agendamento.pdf');
     }

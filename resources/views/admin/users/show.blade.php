@@ -2,20 +2,53 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl font-bold text-senacBlue mb-4">Meus Agendamentos</h2>
+    <h2 class="text-2xl font-bold text-senacBlue mb-4">Informações do Usuário</h2>
 
-    <a href="{{ route('agendamentos.create') }}" class="inline-block bg-senacOrange text-white px-4 py-2 rounded-md mb-4 hover:bg-orange-600 transition duration-300">Criar Novo Agendamento</a>
+    <!-- Exibir informações do usuário -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Detalhes do Usuário</h3>
+        </div>
+        <div class="border-t border-gray-200">
+            <dl>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Nome</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $user->name }}</dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Cargo</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $user->cargo }}</dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Matrícula</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $user->matricula }}</dd>
+                </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">E-mail</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $user->email }}</dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Função</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ ucfirst($user->role) }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
 
-    @if(session('success'))
-        <div class="bg-green-500 text-white p-4 rounded mb-4">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="bg-red-500 text-white p-4 rounded mb-4">{{ session('error') }}</div>
-    @endif
+    <!-- Botão para editar o usuário -->
+    <div class="mt-6">
+        <a href="{{ route('admin.edit-user', $user->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+            Editar Usuário
+        </a>
+    </div>
+
+    <!-- Exibir agendamentos do usuário -->
+    <h2 class="text-2xl font-bold text-senacBlue mt-8 mb-4">Agendamentos</h2>
 
     @if($agendamentos->isEmpty())
-        <p class="text-gray-500">Nenhum agendamento encontrado.</p>
+        <p class="text-gray-500">Nenhum agendamento encontrado para este usuário.</p>
     @else
+        <!-- Tabela de agendamentos -->
         <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
             <thead class="bg-senacBlue text-white">
                 <tr>
@@ -47,7 +80,8 @@
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-300" onclick="return confirm('Tem certeza que deseja deletar este agendamento?')">Deletar</button>
                             </form>
-                            <a href="{{ route('agendamentos.pdf', $agendamento->id) }}" class="bg-gray-500 text-white px-2 py-1 rounded-md hover:bg-gray-600 transition duration-300">PDF</a>
+                            <a href="{{ route('admin.generate-agendamento-pdf', ['user' => $user->id, 'agendamento' => $agendamento->id]) }}" class="bg-gray-500 text-white px-2 py-1 rounded-md hover:bg-gray-600 transition duration-300">PDF</a>
+
                         </td>
                     </tr>
 
@@ -79,4 +113,5 @@
         </table>
     @endif
 </div>
+
 @endsection

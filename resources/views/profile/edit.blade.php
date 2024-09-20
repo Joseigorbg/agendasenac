@@ -7,6 +7,7 @@
     <div class="bg-white shadow rounded-lg p-6 mb-6">
         <p class="text-lg"><strong>Nome:</strong> {{ $user->name }}</p>
         <p class="text-lg"><strong>Email:</strong> {{ $user->email }}</p>
+        <p>Suas informações estão no seu cracha: seu codigo de matricula é: {{ $user->matricula }}</p>
     </div>
 
     <h3 class="text-xl font-semibold text-senacBlue mt-6">Meus Agendamentos</h3>

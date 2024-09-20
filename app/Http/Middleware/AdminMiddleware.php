@@ -13,10 +13,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->cargo === 'Administrador') {
+        // Verifica se o usuário está autenticado e possui o papel 'admin'
+        if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request);
         }
 
-        return redirect('/'); // Redireciona se o usuário não for administrador
+        // Redireciona para a página inicial com uma mensagem de erro
+        return redirect('/')->with('error', 'Você não tem permissão para acessar esta página.');
     }
 }

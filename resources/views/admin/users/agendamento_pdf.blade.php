@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,6 +69,13 @@
         <h1>Detalhes do Agendamento</h1>
     </div>
 
+    <h3>Detalhes do Usuário</h3>
+    <p><strong>Nome:</strong> {{ $user->name }}</p>
+    <p><strong>Matrícula:</strong> {{ $user->matricula }}</p>
+    <p><strong>Email:</strong> {{ $user->email }}</p>
+    <p><strong>Cargo:</strong> {{ ucfirst($user->cargo) }}</p>
+
+    <h3>Detalhes do Agendamento</h3>
     <table class="table">
         <tr>
             <th>Instrutor</th>

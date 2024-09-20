@@ -11,9 +11,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rotas protegidas por autenticação
+// Rotas protegidas por autenticação e verificação de email
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard
+    // Dashboard do usuário
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -26,10 +26,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rotas de Usuário
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
 
-    // Rotas de Admin
+    // Rotas de Admin protegidas pelo middleware 'admin'
     Route::middleware(['admin'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); // Dashboard de admin
+        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index'); // Listar usuários
+        Route::get('/admin/users/{user}', [AdminController::class, 'show'])->name('admin.users.show'); // Visualizar usuário
+        Route::get('/admin/users/{user}/pdf', [AdminController::class, 'generatePDF'])->name('admin.users.pdf'); // Gerar PDF de usuário
+        Route::get('/admin/users/{user}/agendamentos/{agendamento}/pdf', [AdminController::class, 'generateAgendamentoPDF'])->name('admin.generate-agendamento-pdf');
+        Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.destroy'); // Deletar usuário
+        Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit-user'); // Editar usuário
+        Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user'); // Atualizar usuário
+        Route::get('/admin/users/{user}/agendamentos', [AdminController::class, 'show'])->name('admin.user-agendamentos'); // Agendamentos do usuário
+        Route::delete('/admin/users/{user}/agendamentos/{agendamento}', [AdminController::class, 'destroy'])->name('admin.agendamento-destroy');
+        Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user');
     });
+
 
     // Rotas de Agendamentos
     Route::resource('agendamentos', AgendamentoController::class);

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Providers\MiddlewareServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
+    ->withProviders([
+        MiddlewareServiceProvider::class, // Adiciona o MiddlewareServiceProvider
+        // Outros service providers podem ser listados aqui
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

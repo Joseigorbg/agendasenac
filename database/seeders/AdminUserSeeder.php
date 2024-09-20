@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -13,13 +12,17 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('@Pa5MT12'),
-            'role' => 'admin',
-            'cargo' => 'Administrador', // Valor para a coluna 'cargo'
-        ]);
+        // Verifica se já existe um administrador para evitar duplicatas
+        if (!User::where('role', 'admin')->exists()) {
+            User::create([
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('@Pa5MT12'),
+                'role' => 'admin',
+                'cargo' => 'Administrador',
+                'matricula' => 'ADM001', // Campo obrigatório
+                'profile_img' => 'default.png', // Campo com valor padrão
+            ]);
+        }
     }
-    
 }

@@ -27,29 +27,33 @@ class AuthenticatedSessionController extends Controller
             'login' => ['required', 'string'], // Pode ser email ou matrícula
             'password' => ['required', 'string'],
         ]);
-
+    
         // Verifica se o campo de login é um email ou matrícula
         $fieldType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'matricula';
-
+    
         // Autentica o usuário
         if (Auth::attempt([
             $fieldType => $request->login,
             'password' => $request->password,
         ])) {
             $request->session()->regenerate();
-
+    
             // Redirecionar com base no cargo do usuário
-            if (Auth::user()->cargo === 'Administrador') {
-                return redirect()->route('profile.edit');
+            $user = Auth::user();
+            if ($user->cargo === 'Administrador') {
+                // Redireciona para o dashboard do administrador
+                return redirect()->route('admin.dashboard');
             }
-
-            return redirect()->route('profile.edit');
+    
+            // Redireciona para o dashboard do usuário padrão
+            return redirect()->route('dashboard');
         }
-
+    
         return back()->withErrors([
             'login' => 'As credenciais fornecidas não correspondem aos nossos registros.',
         ]);
     }
+    
 
     /**
      * Destroy an authenticated session.

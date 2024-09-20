@@ -1,16 +1,16 @@
-<nav class="bg-senacBlue text-white shadow-lg">
+<nav class="bg-white text-black shadow-lg border-b-8 border-senacOrange">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ url('/') }}" class="text-xl font-bold text-senacOrange">
-                    {{ config('app.name', 'Senac') }}
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('img/Senac_logo.svg.png') }}" alt="Senac Logo" class="h-12"> <!-- Tamanho da logo ajustado -->
                 </a>
             </div>
 
             <!-- Menu Toggle para mobile -->
             <div class="-mr-2 flex md:hidden">
-                <button id="menu-toggle" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-senacOrange focus:outline-none">
+                <button id="menu-toggle" class="inline-flex items-center justify-center p-2 rounded-md text-black hover:bg-senacOrange focus:outline-none">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -19,17 +19,21 @@
 
             <!-- Menu Principal e Links de Autenticação -->
             <div class="hidden md:flex items-center space-x-4">
-                <a href="{{ route('profile.edit') }}" class="text-white hover:text-senacOrange">Profile</a>
-                <!-- Outros links -->
-                
+
                 @guest
-                    <a href="{{ route('login') }}" class="text-white hover:text-senacOrange">Login</a>
+                    <a href="{{ route('login') }}" class="text-black hover:text-senacOrange">Login</a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="text-white hover:text-senacOrange">Registrar</a>
+                        <a href="{{ route('register') }}" class="text-black hover:text-senacOrange">Registrar</a>
                     @endif
                 @else
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="text-black hover:text-senacOrange">Admin Dashboard</a>
+                        <a href="{{ route('admin.users.index') }}" class="text-black hover:text-senacOrange">Gerenciar Usuários</a>
+                    @else
+                        <a href="{{ route('profile.edit') }}" class="text-black hover:text-senacOrange">Agendamentos</a>
+                    @endif
                     <div class="relative">
-                        <button id="user-menu-button" class="flex items-center space-x-2 text-white hover:text-senacOrange focus:outline-none">
+                        <button id="user-menu-button" class="flex items-center space-x-2 text-black hover:text-senacOrange focus:outline-none">
                             @if(Auth::user()->profile_photo_url)
                                 <img class="h-8 w-8 rounded-full" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}">
                             @else
@@ -56,8 +60,19 @@
         <!-- Menu Mobile -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pt-2 pb-3">
-                <a href="{{ route('profile.edit') }}" class="text-white hover:text-senacOrange block">Profile</a>
-                <!-- Outros links -->
+                @guest
+                    <a href="{{ route('login') }}" class="text-black hover:text-senacOrange block">Login</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="text-black hover:text-senacOrange block">Registrar</a>
+                    @endif
+                @else
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="text-black hover:text-senacOrange block">Admin Dashboard</a>
+                        <a href="{{ route('admin.users.index') }}" class="text-black hover:text-senacOrange block">Gerenciar Usuários</a>
+                    @else
+                        <a href="{{ route('profile.edit') }}" class="text-black hover:text-senacOrange block">Agendamentos</a>
+                    @endif
+                @endguest
             </div>
         </div>
     </div>

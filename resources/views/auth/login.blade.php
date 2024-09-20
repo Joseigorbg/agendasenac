@@ -24,6 +24,14 @@
                 @enderror
             </div>
 
+            <div class="flex items-center justify-between mb-4 lg:mb-6">
+                <div class="text-sm lg:text-base">
+                    <a href="{{ route('password.request') }}" class="font-medium text-senacBlue hover:text-senacOrange transition duration-300">
+                        {{ __('Esqueceu a senha?') }}
+                    </a>
+                </div>
+            </div>
+
             <div>
                 <button type="submit" class="w-full bg-senacOrange text-white py-2 lg:py-3 px-4 rounded-md hover:bg-orange-600 transition duration-300 lg:text-lg">
                     {{ __('Login') }}
