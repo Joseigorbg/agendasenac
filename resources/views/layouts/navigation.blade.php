@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ url('/') }}">
+                <a href="{{ url('/dashboard') }}">
                     <img src="{{ asset('img/Senac_logo.svg.png') }}" alt="Senac Logo" class="h-12"> <!-- Tamanho da logo ajustado -->
                 </a>
             </div>

@@ -2,6 +2,13 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
+        <!-- Mensagem de sucesso -->
+        @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            <strong class="font-bold">Sucesso!</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+        @endif
     <h2 class="text-2xl font-bold text-senacBlue mb-4">Informações do Usuário</h2>
 
     <!-- Exibir informações do usuário -->

@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Agendamento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\AgendamentoLog;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
@@ -16,8 +15,12 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $agendamentos = Agendamento::all();
+        $logs = AgendamentoLog::with('user', 'agendamento')->get(); // Inclui o relacionamento com usuário e agendamento
+    
+        return view('admin.dashboard', compact('agendamentos', 'logs'));
     }
+    
 
     /**
      * Listar todos os usuários.
@@ -47,25 +50,34 @@ class AdminController extends Controller
         foreach ($agendamentos as $agendamento) {
             $agendamento->equipamentos = $agendamento->equipamentos ? json_decode($agendamento->equipamentos) : null;
         }
-    
+
         return view('admin.users.show', compact('user', 'agendamentos'));
     }
     
     
 
     /**
-     * Deletar um usuário.
+     * Deletar um agendamento de um usuário.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, Agendamento $agendamento)
     {
-        // Impedir que o administrador delete a si mesmo
-        if (auth()->id() === $user->id) {
-            return redirect()->route('admin.users.index')->with('error', 'Você não pode deletar a si mesmo.');
+        // Verifique se o agendamento pertence ao usuário
+        if ($agendamento->user_id !== $user->id) {
+            return redirect()->route('admin.users.show', $user->id)->with('error', 'Esse agendamento não pertence ao usuário.');
         }
 
-        $user->delete();
+        // Crie o log antes de excluir o agendamento
+        AgendamentoLog::create([
+            'agendamento_id' => $agendamento->id,
+            'user_id' => auth()->user()->id,
+            'action' => 'deleted',
+            'description' => 'Agendamento excluído por Admin',
+        ]);
+    
+        // Exclua o agendamento após o log ser criado
+        $agendamento->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Usuário deletado com sucesso.');
+        return redirect()->route('admin.users.show', $user->id)->with('success', 'Agendamento excluído com sucesso!');
     }
 
     /**
@@ -75,8 +87,11 @@ class AdminController extends Controller
     {
         $agendamentos = Agendamento::where('user_id', $user->id)->get();
         $pdf = Pdf::loadView('admin.users.pdf', compact('user', 'agendamentos'));
+        
+
         return $pdf->download("usuario_{$user->id}.pdf");
     }
+
     public function generateAgendamentoPDF(User $user, Agendamento $agendamento)
     {
         if ($agendamento->user_id !== $user->id) {
@@ -85,25 +100,52 @@ class AdminController extends Controller
     
         $agendamento->equipamentos = json_decode($agendamento->equipamentos, true);
         $pdf = Pdf::loadView('admin.users.agendamento_pdf', compact('user', 'agendamento'));
-    
+        
+
         return $pdf->download("agendamento_usuario_{$user->id}_agendamento_{$agendamento->id}.pdf");
     }        
+
     public function edit(User $user)
-{
-    return view('admin.users.edit', compact('user'));
-}
+    {
+        return view('admin.users.edit', compact('user'));
+    }
 
-public function update(Request $request, User $user)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'role' => 'required|string|in:user,admin',
-    ]);
+    public function update(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'role' => 'required|string|in:user,admin',
+        ]);
 
-    $user->update($validated);
+        $user->update($validated);
 
-    return redirect()->route('admin.users.show', $user->id)->with('success', 'Perfil atualizado com sucesso!');
-}
+        // Log de atualização de perfil
+        AgendamentoLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'updated',
+            'description' => "Perfil do usuário {$user->id} atualizado pelo Admin",
+        ]);
 
+        return redirect()->route('admin.users.show', $user->id)->with('success', 'Perfil atualizado com sucesso!');
+    }
+    public function destroyUser(User $user)
+    {
+        // Exclua todos os agendamentos relacionados ao usuário antes de excluir o usuário
+        $user->agendamentos()->delete();
+    
+        // Crie um log de exclusão de usuário
+        AgendamentoLog::create([
+            'user_id' => auth()->user()->id,
+            'agendamento_id' => null, // Não há agendamento nesse caso
+            'action' => 'deleted',
+            'description' => "Usuário {$user->id} excluído pelo Admin",
+        ]);
+    
+        // Exclua o usuário
+        $user->delete();
+    
+        return redirect()->route('admin.users.index')->with('success', 'Usuário excluído com sucesso!');
+    }
+    
 }

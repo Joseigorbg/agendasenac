@@ -6,6 +6,8 @@ use App\Models\Agendamento;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\EquipamentoTrait;
+use App\Models\AgendamentoLog;
+
 
 class AgendamentoController extends Controller
 {
@@ -49,17 +51,21 @@ class AgendamentoController extends Controller
             'data_inicio'  => 'required|date',
             'data_fim'     => 'required|date|after_or_equal:data_inicio',
             'turno'        => 'required|string|in:manhã,tarde,noite',
-            // Não precisamos mais validar equipamentos como JSON, eles serão tratados diretamente
         ]);
-    
-        // Captura e codifica os equipamentos como JSON
+
         $validated['equipamentos'] = json_encode($this->capturaEquipamentos($request));
-    
-        // Adiciona o user_id ao agendamento
         $validated['user_id'] = auth()->id();
-    
-        Agendamento::create($validated);
-    
+
+        $agendamento = Agendamento::create($validated);
+
+        // Registrar log da ação de criação
+        AgendamentoLog::create([
+            'agendamento_id' => $agendamento->id,
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'description' => 'Agendamento criado por ' . auth()->user()->name,
+        ]);
+
         return redirect()->route('agendamentos.index')->with('success', 'Agendamento criado com sucesso!');
     }
 
@@ -93,6 +99,13 @@ class AgendamentoController extends Controller
             'data_inicio'  => 'required|date',
             'data_fim'     => 'required|date|after_or_equal:data_inicio',
             'turno'        => 'required|string|in:manhã,tarde,noite',
+        ]);   
+           // Registrar log da ação de atualização
+        AgendamentoLog::create([
+            'agendamento_id' => $agendamento->id,
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'description' => 'Agendamento atualizado por ' . auth()->user()->name,
         ]);
     
         // Captura e codifica os equipamentos como JSON
@@ -120,6 +133,14 @@ class AgendamentoController extends Controller
     
         $agendamento->delete();
     
+        // Registrar log da ação de exclusão
+        AgendamentoLog::create([
+            'agendamento_id' => $agendamento->id,
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'description' => 'Agendamento excluído por ' . auth()->user()->name,
+        ]);
+        
         // Redireciona para a página do usuário correspondente se for administrador
         if (auth()->user()->role === 'admin') {
             return redirect()->route('admin.users.show', ['user' => $agendamento->user_id])->with('success', 'Agendamento deletado com sucesso!');

@@ -2,17 +2,55 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl font-bold text-blue-600 mb-4">Dashboard de Administração</h2>
 
-    <div class="mt-4">
-        <a href="{{ route('admin.users.index') }}" class="inline-block bg-senacOrange text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">Gerenciar Usuários</a>
+    <!-- Título da página -->
+    <h2 class="text-2xl font-bold text-senacBlue mb-6">Dashboard de Administração</h2>
+
+    <!-- Verificação se há logs para exibir -->
+    @if(isset($logs) && $logs->isNotEmpty())
+        <table class="min-w-full bg-white shadow-lg rounded-lg overflow-hidden mb-6">
+            <thead class="bg-senacBlue text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left">Usuário</th>
+                    <th class="py-3 px-4 text-left">Ação</th>
+                    <th class="py-3 px-4 text-left">Agendamento</th>
+                    <th class="py-3 px-4 text-left">Descrição</th>
+                    <th class="py-3 px-4 text-left">Data</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 divide-y divide-gray-200">
+
+                <!-- Loop pelos logs -->
+                @foreach($logs as $log)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="py-3 px-4">{{ $log->user->name }}</td>
+                        <td class="py-3 px-4">{{ $log->action }}</td>
+                        <td class="py-3 px-4">
+                            @if($log->agendamento)
+                                #{{ $log->agendamento->id }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td class="py-3 px-4">{{ $log->description }}</td>
+                        <td class="py-3 px-4">{{ $log->created_at->format('d/m/Y H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    <!-- Caso não haja logs -->
+    @else
+        <div class="bg-yellow-100 text-yellow-700 p-4 rounded-md mb-6">
+            <p class="text-center">Nenhuma ação registrada no momento.</p>
+        </div>
+    @endif
+
+    <!-- Botão para redirecionar para a gestão de agendamentos -->
+    <div class="flex justify-center">
+        <a href="{{ route('admin.users.index') }}" class="bg-senacOrange text-white py-2 px-4 rounded-md hover:bg-senacOrange-dark transition">
+            Gerenciar Agendamentos
+        </a>
     </div>
-
-    @if(session('success'))
-        <div class="bg-green-500 text-white p-4 rounded mb-4">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="bg-red-500 text-white p-4 rounded mb-4">{{ session('error') }}</div>
-    @endif
 </div>
 @endsection

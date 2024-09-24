@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Rotas de Usuário
-    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
     // Rotas de Admin protegidas pelo middleware 'admin'
     Route::middleware(['admin'])->group(function () {
@@ -33,7 +33,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/users/{user}', [AdminController::class, 'show'])->name('admin.users.show'); // Visualizar usuário
         Route::get('/admin/users/{user}/pdf', [AdminController::class, 'generatePDF'])->name('admin.users.pdf'); // Gerar PDF de usuário
         Route::get('/admin/users/{user}/agendamentos/{agendamento}/pdf', [AdminController::class, 'generateAgendamentoPDF'])->name('admin.generate-agendamento-pdf');
-        Route::delete('/admin/users/{user}', [AdminController::class, 'destroy'])->name('admin.destroy'); // Deletar usuário
+        Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->middleware('admin')->name('admin.destroy-user');
+
         Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit-user'); // Editar usuário
         Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user'); // Atualizar usuário
         Route::get('/admin/users/{user}/agendamentos', [AdminController::class, 'show'])->name('admin.user-agendamentos'); // Agendamentos do usuário

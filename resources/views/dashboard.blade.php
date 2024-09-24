@@ -1,16 +1,54 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
+
+    <!-- Título da página -->
+    <h2 class="text-2xl font-bold text-senacBlue mb-6">Histórico de Ações</h2>
+
+    <!-- Verificação se há logs para exibir -->
+    @if(isset($logs) && $logs->isNotEmpty())
+        <table class="min-w-full bg-white shadow-lg rounded-lg overflow-hidden mb-6">
+            <thead class="bg-senacBlue text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left">Ação</th>
+                    <th class="py-3 px-4 text-left">Agendamento</th>
+                    <th class="py-3 px-4 text-left">Descrição</th>
+                    <th class="py-3 px-4 text-left">Data</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 divide-y divide-gray-200">
+
+                <!-- Loop pelos logs -->
+                @foreach($logs as $log)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="py-3 px-4">{{ $log->action }}</td>
+                        <td class="py-3 px-4">
+                            @if($log->agendamento)
+                                #{{ $log->agendamento->id }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td class="py-3 px-4">{{ $log->description }}</td>
+                        <td class="py-3 px-4">{{ $log->created_at->format('d/m/Y H:i') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    <!-- Caso não haja logs -->
+    @else
+        <div class="bg-yellow-100 text-yellow-700 p-4 rounded-md mb-6">
+            <p class="text-center">Nenhuma ação registrada no momento.</p>
         </div>
+    @endif
+
+    <!-- Botão para redirecionar para agendamentos, agora abaixo da tabela -->
+    <div class="flex justify-center">
+        <a href="{{ route('profile.edit') }}" class="bg-senacOrange text-white py-2 px-4 rounded-md hover:bg-senacOrange-dark transition">
+            Meus Agendamentos
+        </a>
     </div>
-</x-app-layout>
+</div>
+@endsection

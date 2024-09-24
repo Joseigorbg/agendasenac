@@ -36,7 +36,7 @@
                         <td class="py-3 px-4 space-x-2">
                             <a href="{{ route('admin.users.show', $user) }}" class="bg-senacBlue text-white px-2 py-1 rounded-md hover:bg-senacDark transition duration-300">Ver</a>
                             <a href="{{ route('admin.users.pdf', $user) }}" class="bg-gray-500 text-white px-2 py-1 rounded-md hover:bg-gray-600 transition duration-300">PDF</a>
-                            <form action="{{ route('admin.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Tem certeza que deseja deletar este usuário?');">
+                            <form action="{{ route('admin.destroy-user', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Tem certeza que deseja deletar este usuário?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-300">Deletar</button>

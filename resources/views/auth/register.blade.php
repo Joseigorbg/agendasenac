@@ -15,6 +15,13 @@
                     <span class="text-red-500 text-sm lg:text-base">{{ $message }}</span>
                 @enderror
             </div>
+            <div class="mb-4 lg:mb-6">
+                <label for="matricula" class="block text-sm lg:text-base font-medium text-gray-700">{{ __('Matrícula') }}</label>
+                <input id="matricula" type="text" class="mt-1 block w-full p-3 lg:p-4 border border-gray-300 rounded-md shadow-sm focus:ring-senacOrange focus:border-senacOrange sm:text-sm lg:text-base @error('matricula') border-red-500 @enderror" name="matricula" value="{{ old('matricula') }}" required>
+                @error('matricula')
+                    <span class="text-red-500 text-sm lg:text-base">{{ $message }}</span>
+                @enderror
+            </div>
 
             <div class="mb-4 lg:mb-6">
                 <label for="cargo" class="block text-sm lg:text-base font-medium text-gray-700">{{ __('Cargo') }}</label>

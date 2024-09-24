@@ -24,14 +24,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($user) {
-            $user->matricula = 'MT-' . Str::upper(Str::random(6));
-        });
-    }
+    //     static::creating(function ($user) {
+    //         $user->matricula = 'MT-' . Str::upper(Str::random(6));
+    //     });
+    // }
 
     public function agendamentos()
     {
