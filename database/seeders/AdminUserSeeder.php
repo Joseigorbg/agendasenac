@@ -17,11 +17,11 @@ class AdminUserSeeder extends Seeder
             User::create([
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
-                'password' => bcrypt('@Pa5MT12'),
-                'role' => 'admin',
-                'cargo' => 'Administrador',
-                'matricula' => 'ADM001', // Campo obrigatório
-                'profile_img' => 'default.png', // Campo com valor padrão
+                'password' => bcrypt('@Pa5MT12'), // Senha criptografada
+                'role' => 'admin', // Definir como administrador
+                'cargo' => 'Administrador', // Cargo obrigatório
+                'matricula' => 'ADM001', // Campo de matrícula único e obrigatório
+                'profile_img' => 'default.png', // Imagem padrão
             ]);
         }
     }
