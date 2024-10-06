@@ -13,18 +13,26 @@ class Agendamento extends Model
         'instrutor', 'sala', 'data_inicio', 'data_fim', 'turno', 'user_id', 'equipamentos'
     ];
 
-    // Aqui você adiciona o casts
+    // Cast para tratar o campo 'equipamentos' como array
     protected $casts = [
         'equipamentos' => 'array',
     ];
 
+    // Relação com Equipamento (hasOne)
     public function equipamentos()
     {
         return $this->hasOne(Equipamento::class);
     }
 
+    // Relação com o usuário (belongsTo)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Relação com os logs de agendamento (hasMany)
+    public function logs()
+    {
+        return $this->hasMany(AgendamentoLog::class);
     }
 }

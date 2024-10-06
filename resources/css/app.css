@@ -111,3 +111,19 @@ button {
 button:hover {
     transform: scale(1.05);
 }
+
+.bg-fundo {
+    background-image: url('{{ asset('img/fundo.png') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+    .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    .md\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}

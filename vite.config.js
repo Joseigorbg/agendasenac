@@ -11,4 +11,5 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    assetsInclude: ['**/*.jpg', '**/*.png', '**/*.svg'], // Incluir tipos de arquivos de imagem
 });

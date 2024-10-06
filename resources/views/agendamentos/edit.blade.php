@@ -30,12 +30,14 @@
 
         <div class="mb-4">
             <label for="turno" class="block text-gray-700 font-semibold">Turno:</label>
-            <select id="turno" name="turno" class="form-select mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-senacOrange focus:border-senacOrange">
+            <select id="turno" name="turno" class="form-select mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-senacOrange focus:border-senacOrange" required>
+                <option value="">Escolha um turno</option>
                 <option value="manhã" {{ $agendamento->turno == 'manhã' ? 'selected' : '' }}>Manhã</option>
                 <option value="tarde" {{ $agendamento->turno == 'tarde' ? 'selected' : '' }}>Tarde</option>
                 <option value="noite" {{ $agendamento->turno == 'noite' ? 'selected' : '' }}>Noite</option>
             </select>
         </div>
+
 
         <!-- Seção de edição de equipamentos -->
         <h2 class="text-xl font-semibold mb-4 text-gray-900 shadow-sm">Editar Equipamentos</h2>
@@ -54,6 +56,16 @@
         <!-- Botão para atualizar o agendamento -->
         <button type="submit" class="bg-senacOrange text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300 mt-4">
             Atualizar Agendamento
+        </button>
+    </form>
+
+    <!-- Formulário para excluir o agendamento -->
+    <form action="{{ route('agendamentos.destroy', $agendamento->id) }}" method="POST" class="mt-6">
+        @csrf
+        @method('DELETE')
+
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300" onclick="return confirm('Você tem certeza que deseja excluir este agendamento?');">
+            Excluir Agendamento
         </button>
     </form>
 </div>

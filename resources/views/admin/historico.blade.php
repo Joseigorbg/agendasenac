@@ -11,6 +11,7 @@
         <table class="min-w-full bg-white shadow-lg rounded-lg overflow-hidden mb-6">
             <thead class="bg-senacBlue text-white">
                 <tr>
+                    <th class="py-3 px-4 text-left">Usuário</th>
                     <th class="py-3 px-4 text-left">Ação</th>
                     <th class="py-3 px-4 text-left">Agendamento</th>
                     <th class="py-3 px-4 text-left">Descrição</th>
@@ -22,6 +23,7 @@
                 <!-- Loop pelos logs -->
                 @foreach($logs as $log)
                     <tr class="hover:bg-gray-50 transition">
+                        <td class="py-3 px-4">{{ $log->user->name }}</td>
                         <td class="py-3 px-4">{{ $log->action }}</td>
                         <td class="py-3 px-4">
                             @if($log->agendamento)
@@ -43,12 +45,5 @@
             <p class="text-center">Nenhuma ação registrada no momento.</p>
         </div>
     @endif
-
-    <!-- Botão para redirecionar para agendamentos -->
-    <div class="flex justify-center">
-        <a href="{{ route('profile.edit') }}" class="bg-senacOrange text-white py-2 px-4 rounded-md hover:bg-senacOrange-dark transition">
-            Meus Agendamentos
-        </a>
-    </div>
 </div>
 @endsection

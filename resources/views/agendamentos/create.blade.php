@@ -30,6 +30,7 @@
         <div class="mb-4">
             <label for="turno" class="block text-gray-700 font-semibold">Turno:</label>
             <select id="turno" name="turno" class="form-select mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-senacOrange focus:border-senacOrange">
+                <option value="">Escolha um turno</option>
                 <option value="manhã">Manhã</option>
                 <option value="tarde">Tarde</option>
                 <option value="noite">Noite</option>

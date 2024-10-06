@@ -18,12 +18,16 @@
             <input type="email" id="email" name="email" value="{{ $user->email }}" class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
         </div>
 
+        <!-- Novo campo para alteração de senha -->
         <div class="mb-4">
-            <label for="role" class="block text-gray-700 font-semibold">Função:</label>
-            <select id="role" name="role" class="form-select mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
-                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Usuário</option>
-                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrador</option>
-            </select>
+            <label for="password" class="block text-gray-700 font-semibold">Nova Senha:</label>
+            <input type="password" id="password" name="password" class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+            <small class="text-gray-500">Deixe em branco se não deseja alterar a senha.</small>
+        </div>
+
+        <div class="mb-4">
+            <label for="password_confirmation" class="block text-gray-700 font-semibold">Confirmar Senha:</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
         </div>
 
         <button type="submit" class="bg-senacOrange text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300 mt-4">

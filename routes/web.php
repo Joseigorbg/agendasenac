@@ -28,25 +28,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Rotas de Admin protegidas pelo middleware 'admin'
     Route::middleware(['admin'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); // Dashboard de admin
-        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index'); // Listar usuários
-        Route::get('/admin/users/{user}', [AdminController::class, 'show'])->name('admin.users.show'); // Visualizar usuário
-        Route::get('/admin/users/{user}/pdf', [AdminController::class, 'generatePDF'])->name('admin.users.pdf'); // Gerar PDF de usuário
+        // Dashboard de admin
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+        // Rotas de Usuários
+        Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users.index'); 
+        Route::get('/admin/users/{user}', [AdminController::class, 'show'])->name('admin.users.show'); 
+        Route::get('/admin/users/{user}/pdf', [AdminController::class, 'generatePDF'])->name('admin.users.pdf'); 
         Route::get('/admin/users/{user}/agendamentos/{agendamento}/pdf', [AdminController::class, 'generateAgendamentoPDF'])->name('admin.generate-agendamento-pdf');
-        Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->middleware('admin')->name('admin.destroy-user');
+        Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.destroy-user');
+        Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit-user'); 
+        Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user'); 
 
-        Route::get('/admin/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit-user'); // Editar usuário
-        Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user'); // Atualizar usuário
-        Route::get('/admin/users/{user}/agendamentos', [AdminController::class, 'show'])->name('admin.user-agendamentos'); // Agendamentos do usuário
+        // Rotas de Agendamentos dos usuários
+        Route::get('/admin/users/{user}/agendamentos', [AdminController::class, 'show'])->name('admin.user-agendamentos');
         Route::delete('/admin/users/{user}/agendamentos/{agendamento}', [AdminController::class, 'destroy'])->name('admin.agendamento-destroy');
-        Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update-user');
+        Route::match(['post', 'delete'], '/admin/confirm-checklist', [AdminController::class, 'confirmChecklist'])->name('admin.confirmChecklist');
+        Route::delete('/admin/agendamentos/{agendamento}', [AdminController::class, 'destroyAgendamento'])->name('agendamentos.destroy');
+
+        // Rota para editar agendamentos
+        Route::get('/admin/agendamentos/{agendamento}/edit', [AdminController::class, 'editAgendamento'])->name('admin.agendamento.edit');
+        // Exclusão direta de agendamentos (se não for atrelada ao usuário diretamente)
+        Route::delete('/admin/agendamentos/{agendamento}', [AdminController::class, 'destroyAgendamento'])->name('admin.agendamentos.destroy');
     });
+    Route::get('/admin/limpar-entrada/{id}', [AdminController::class, 'limparEntrada'])->name('admin.limparEntrada');
+    Route::get('/admin/limpar-saida/{id}', [AdminController::class, 'limparSaida'])->name('admin.limparSaida');
+    Route::get('/admin/historico', [AdminController::class, 'historico'])->name('admin.historico');
 
-
-    // Rotas de Agendamentos
+    // Rotas de Agendamentos gerais
     Route::resource('agendamentos', AgendamentoController::class);
-
-    // Rota específica para gerar o PDF de um agendamento
+    // Rota para gerar o PDF de um agendamento específico
     Route::get('/agendamentos/{agendamento}/pdf', [AgendamentoController::class, 'generatePDF'])->name('agendamentos.pdf');
 });
 

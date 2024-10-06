@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('agendamento_id')->nullable()->constrained()->onDelete('cascade'); // Altere aqui
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default('pendente'); // 'pendente', 'confirmado', 'ok'
             $table->string('action');
             $table->text('description');
             $table->timestamps();

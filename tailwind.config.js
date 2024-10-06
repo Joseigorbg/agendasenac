@@ -13,12 +13,14 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-                
             },
             colors: {
                 senacOrange: '#f37021', // Cor laranja
                 senacBlue: '#004481',   // Cor azul
-              },
+            },
+            backgroundImage: {
+                'fundo': "url('/img/fundo.png')", // Caminho relativo da imagem
+            },
         },
     },
 

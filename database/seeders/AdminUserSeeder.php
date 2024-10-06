@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
         if (!User::where('role', 'admin')->exists()) {
             User::create([
                 'name' => 'Admin',
-                'email' => 'admin@example.com',
+                'email' => 'admin@ceo43.com',
                 'password' => bcrypt('@Pa5MT12'), // Senha criptografada
                 'role' => 'admin', // Definir como administrador
                 'cargo' => 'Administrador', // Cargo obrigatório
